@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import { RegisterRequest } from '../interfaces/register';
+import { UserDetail } from '../interfaces/user-detail';
 
 @Injectable({
   providedIn: 'root'
@@ -32,16 +33,11 @@ export class AuthService {
 
   register(data: RegisterRequest): Observable<AuthResponse> {
   return this.http
-    .post<AuthResponse>(`${this.apiUrl}/account/register`, data)
-    .pipe(
-      map((response) => {
-        if (response.isSuccess) {
-          localStorage.setItem(this.tokenKey, response.token);
-        }
-        return response;
-      })
-    );
+    .post<AuthResponse>(`${this.apiUrl}/account/register`, data);
   }
+
+  getDetail=():Observable<UserDetail> =>
+    this.http.get<UserDetail>(`${this.apiUrl}/account/detail`);
 
   getUserDetail=()=>{
     const token = this.getToken();
@@ -76,6 +72,6 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
   };
 
-  private getToken = ():string|null => 
+  getToken = ():string|null => 
     localStorage.getItem(this.tokenKey)  ||  '';
 };
