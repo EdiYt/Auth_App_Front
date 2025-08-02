@@ -6,6 +6,7 @@ import { AuthResponse } from '../interfaces/auth-response';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
+import { RegisterRequest } from '../interfaces/register';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,19 @@ export class AuthService {
   login(data: LoginRequest): Observable<AuthResponse> {
   return this.http
     .post<AuthResponse>(`${this.apiUrl}/account/login`, data)
+    .pipe(
+      map((response) => {
+        if (response.isSuccess) {
+          localStorage.setItem(this.tokenKey, response.token);
+        }
+        return response;
+      })
+    );
+  }
+
+  register(data: RegisterRequest): Observable<AuthResponse> {
+  return this.http
+    .post<AuthResponse>(`${this.apiUrl}/account/register`, data)
     .pipe(
       map((response) => {
         if (response.isSuccess) {
