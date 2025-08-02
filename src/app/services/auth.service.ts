@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import {jwtDecode} from 'jwt-decode';
 import { RegisterRequest } from '../interfaces/register';
 import { UserDetail } from '../interfaces/user-detail';
+import { ResetPasswordRequest } from '../interfaces/reset-password-request';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,9 @@ export class AuthService {
 
   forgotPassword = (email:string): Observable<AuthResponse> => 
     this.http.post<AuthResponse>(`${this.apiUrl}/account/forgot-password`,{email});
+
+  resetPassword = (data:ResetPasswordRequest): Observable<AuthResponse> => 
+    this.http.post<AuthResponse>(`${this.apiUrl}/account/reset-password`,data);
 
   getUserDetail=()=>{
     const token = this.getToken();
