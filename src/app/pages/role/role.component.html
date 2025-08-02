@@ -1,0 +1,49 @@
+<div class="md:mx-96 my-12 rounded-md p-3">
+  <h1 class="text-2xl font-semibold">Role Management</h1>
+  <hr class="my-3" />
+
+  <div class="flex flex-col md:flex-row gap-10 items-start">
+    <div class="md:w-1/2 w-full flex flex-col gap-6">
+      <div class="bg-white p-5 rounded-md shadow-md">
+        <h2 class="text-lg font-bold mb-4">Add New Role</h2>
+        <app-role-form [errorMessage]="errorMessage" [role]="role" (addRole)="createRole($event)"/>
+      </div>
+      <div class="bg-white p-5 rounded-md shadow-md">
+        <h2 class="text-lg font-bold mb-4">Assign Role To User</h2>
+        <div class="flex flex-col gap-4">
+          <mat-form-field class="w-full">
+            <mat-label>User</mat-label>
+            <mat-select [(value)]="selectedUser">
+              @for (user of users$ | async; track user.id) {
+                <mat-option [value]="user.id">
+                  {{user.fullName}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="w-full">
+            <mat-label>Role</mat-label>
+            <mat-select [(value)]="selectedRole">
+              @for (role of roles$ | async; track role.id) {
+                <mat-option [value]="role.id">
+                  {{role.name}}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button
+          [disabled]="!selectedUser || !selectedRole"
+          class="bg-purple-600 disabled:bg-blue-300 text-white rounded-md px-4 py-2 mt-5"
+          (click)="assignRole()"
+        >
+          Assign
+        </button>
+      </div>
+    </div>
+    <div class="md:w-1/2 w-full bg-white p-5 rounded-md shadow-sm self-start">
+      <h2 class="text-lg font-bold mb-4">Role List</h2>
+      <app-role-list [roles]="roles$ | async" (deleteRole)="deleteRole($event)"/>
+    </div>
+  </div>
+</div>
